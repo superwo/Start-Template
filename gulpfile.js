@@ -2,6 +2,7 @@ var gulp           = require('gulp'),
 		gutil          = require('gulp-util' ),
 		sass           = require('gulp-sass'),
 		pug						 = require('gulp-pug'),
+		plumber        = require('gulp-plumber'),
 		browserSync    = require('browser-sync'),
 		concat         = require('gulp-concat'),
 		uglify         = require('gulp-uglify'),
@@ -55,6 +56,7 @@ gulp.task('browser-sync', function() {
 
 gulp.task('sass', function() {
 	return gulp.src('app/sass/**/*.sass')
+	.pipe(plumber())
 	.pipe(sass({outputStyle: 'expand'}).on("error", notify.onError()))
 	.pipe(rename({suffix: '.min', prefix : ''}))
 	.pipe(gcmq())
@@ -66,6 +68,7 @@ gulp.task('sass', function() {
 
 gulp.task('pug', function() {
 	return gulp.src('app/pug/pages/*.pug')
+	.pipe(plumber())
 	.pipe(pug({
 		pretty: true
 	}))
