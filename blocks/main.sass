@@ -1,8 +1,8 @@
-@import "fonts"
-@import "libs"
-@import "vars"
-@import "modules/btn"
-@import "_mixins/mixins"
+@import "sass-base/fonts"
+@import "sass-base/libs"
+@import "sass-base/vars"
+@import "sass-base/btn"
+@import "sass-base/mixins"
 
 *::-webkit-input-placeholder
 	color: #666
@@ -43,5 +43,5 @@ body
 	display: block
 	max-width: 100%
 	height: auto
-
-@import "media" // Всегда в конце
+@import "modules/header/header"
+@import "sass-base/media" // Всегда в конце

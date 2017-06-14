@@ -21,32 +21,38 @@ var gulp           = require('gulp'),
 		ftp            = require('vinyl-ftp'),
 		notify         = require("gulp-notify");
 
-// Скрипты проекта
+var paths = {
+			blocks: 'blocks/',
+			devDir: 'app/',
+			outputDir: 'dist/'
+		};
+
+// Tasks
 
 gulp.task('common-js', function() {
 	return gulp.src([
-		'app/js/common.js',
+		paths.devDir + 'js/common.js',
 		])
 	.pipe(concat('common.min.js'))
 	.pipe(uglify())
-	.pipe(gulp.dest('app/js'));
+	.pipe(gulp.dest(paths.devDir + 'js'));
 });
 
 gulp.task('js', ['common-js'], function() {
 	return gulp.src([
-		'app/libs/jquery/dist/jquery.min.js',
-		'app/js/common.min.js', // Всегда в конце
+		paths.devDir + 'libs/jquery/dist/jquery.min.js',
+		paths.devDir + 'js/common.min.js', // Всегда в конце
 		])
 	.pipe(concat('scripts.min.js'))
 	// .pipe(uglify()) // Минимизировать весь js (на выбор)
-	.pipe(gulp.dest('app/js'))
+	.pipe(gulp.dest(paths.devDir + 'js'))
 	.pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('browser-sync', function() {
 	browserSync({
 		server: {
-			baseDir: 'app'
+			baseDir: paths.devDir
 		},
 		notify: false,
 		// tunnel: true,
@@ -55,32 +61,32 @@ gulp.task('browser-sync', function() {
 });
 
 gulp.task('sass', function() {
-	return gulp.src('app/sass/**/*.sass')
+	return gulp.src(paths.blocks + '*.sass')
 	.pipe(plumber())
 	.pipe(sass({outputStyle: 'expand'}).on("error", notify.onError()))
 	.pipe(rename({suffix: '.min', prefix : ''}))
 	.pipe(gcmq())
 	.pipe(autoprefixer(['last 15 versions']))
 	.pipe(cleanCSS()) // Опционально, закомментировать при отладке
-	.pipe(gulp.dest('app/css'))
+	.pipe(gulp.dest(paths.devDir + 'css'))
 	.pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('pug', function() {
-	return gulp.src('app/pug/pages/*.pug')
+	return gulp.src(paths.blocks + 'pages/*.pug')
 	.pipe(plumber())
 	.pipe(pug({
 		pretty: true
 	}))
-	.pipe(gulp.dest('app'))
+	.pipe(gulp.dest(paths.devDir))
 	.pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('watch', ['sass', 'js', 'browser-sync'], function() {
-	gulp.watch('app/sass/**/*.sass', ['sass']);
-	gulp.watch('app/pug/**/*.pug', ['pug']);
-	gulp.watch(['libs/**/*.js', 'app/js/common.js'], ['js']);
-	gulp.watch('app/*.html', browserSync.reload);
+	gulp.watch(paths.blocks + '**/*.sass', ['sass']);
+	gulp.watch(paths.blocks + '**/*.pug', ['pug']);
+	gulp.watch(['libs/**/*.js', paths.devDir + 'js/common.js'], ['js']);
+	gulp.watch(paths.devDir + '*.html', browserSync.reload);
 });
 
 gulp.task('imagemin', function() {

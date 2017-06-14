@@ -1,4 +1,4 @@
-include ../common/mixins.pug
+include ../pug-base/mixins.pug
 doctype html
 html(lang='en')
 
@@ -32,11 +32,11 @@ html(lang='en')
 
   body
     .wrapper
-      include ../common/header.pug
+      include ../modules/header/header.pug
       main.maincontent  
         block content
           .hidden
         
-    include ../common/footer.pug
+    include ../modules/footer/footer.pug
   
     script(src='js/scripts.min.js')
