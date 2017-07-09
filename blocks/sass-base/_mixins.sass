@@ -1,0 +1,165 @@
+=coverdiv
+	position: absolute
+	top: 0
+	left: 0
+	width: 100%
+	height: 100%
+
+=abs-center
+	position: absolute
+	top: 50%
+	left: 50%
+	transform: translate(-50%,-50%)
+
+=hide-text
+	font: 0/0 a
+	text-shadow: none
+	color: transparent
+
+=hidetext
+	+hide-text
+
+=justify
+	text-align: justify
+	line-height: 0
+	font-size: 0
+	text-justify: newspaper
+	zoom: 1
+	text-align-last: justify
+	&:after
+		content: ""
+		display: inline-block
+		width: 100%
+		height: 0px
+		visibility: hidden
+		overflow: hidden
+=vertical
+	text-align: center
+	font-size: 0
+	&:before
+		content: ""
+		display: inline-block
+		vertical-align: middle
+		width: 0
+		height: 100%
+
+
+=font-smoothing($val: antialiased)
+	-webkit-font-smoothing: $val
+	-moz-font-smoothing: $val
+	-ms-font-smoothing: $val
+	-o-font-smoothing: $val
+
+// make arrow
+=arr($width, $height, $bg, $direction)
+	width: 0px
+	height: 0px
+	border-style: solid
+	@if $direction == t
+		border-width: 0 $width / 2 + px $height + px $width / 2 + px
+		border-color: transparent transparent $bg transparent
+	@if $direction == r
+		border-width: $height / 2 + px 0 $height / 2 + px $width + px
+		border-color: transparent transparent transparent $bg
+	@if $direction == b
+		border-width: $height + px $width / 2 + px 0 $width / 2 + px
+		border-color: $bg transparent transparent transparent
+	@if $direction == l
+		border-width: $height / 2 + px $width + px $height / 2 + px 0
+		border-color: transparent $bg transparent transparent
+	@if $direction == tl
+		border-width: $height + px $width + px 0 0
+		border-color: $bg transparent transparent transparent
+	@if $direction == tr
+		border-width: 0 $width + px $height + px 0
+		border-color: transparent $bg transparent transparent
+	@if $direction == br
+		border-width: 0 0 $height + px $width + px
+		border-color: transparent transparent $bg transparent
+	@if $direction == bl
+		border-width: $height + px 0 0 $width + px
+		border-color: transparent transparent transparent $bg
+
+
+=counter($var)
+	counter-reset: $var
+	> li, > dt
+		&:before
+			content: counter($var)
+			counter-increment: $var
+
+=links($link, $visit, $hover, $active)
+	a
+		color: $link
+		&:visited
+			color: $visit
+		&:hover
+			color: $hover
+		&:active
+			color: $active
+
+
+//Mixins for creating sprites png
+=spriteWidth($sprite)
+  width: nth($sprite, 5)
+
+=spriteHeight($sprite)
+  height: nth($sprite, 6)
+
+=spritePosition($sprite)
+  background-position: nth($sprite, 3) nth($sprite, 4)
+
+=spriteImage($sprite)
+  background-image: url(unquote('../img/sprite/' + nth($sprite,9)))
+
+=sprite($sprite)
+  +spriteImage($sprite)
+  +spritePosition($sprite)
+  +spriteWidth($sprite)
+  +spriteHeight($sprite)
+
+// media mixins
+// desktop first
+=desktop-max()
+	@media screen and (max-width: 1200px)
+		@content
+
+=laptop-max()
+	@media screen and (max-width: 992px)
+		@content
+
+=tablets-max()
+	@media screen and (max-width: 768px)
+		@content
+
+=phones-max()
+	@media screen and (max-width: 480px)
+		@content
+
+// mobile first
+=phones-min()
+	@media only screen and (min-width : 320px)
+		@content
+
+=tablets-min()
+	@media only screen and (min-width : 768px)
+		@content
+
+=laptop-min()
+	@media only screen and (min-width : 992px)
+		@content
+
+=desktop-min()
+	@media only screen and (min-width : 1200px)
+		@content
+
+=rem($size)
+  $remSize: $size / 16
+  font-size: #{$remSize}rem
+
+=size($a, $b: false)
+  width: $a
+  @if $b
+    height: $b
+  @else
+    height: $a

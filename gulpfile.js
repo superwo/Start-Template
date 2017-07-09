@@ -63,7 +63,13 @@ gulp.task('browser-sync', function() {
 gulp.task('sass', function() {
 	return gulp.src(paths.blocks + '*.sass')
 	.pipe(plumber())
-	.pipe(sass({outputStyle: 'expand'}).on("error", notify.onError()))
+	.pipe(sass({outputStyle: 'expand'}))
+	.on("error", notify.onError(function(error) {
+		return {
+			title: 'SASS',
+			message: error.message
+		};
+	}))
 	.pipe(rename({suffix: '.min', prefix : ''}))
 	.pipe(gcmq())
 	.pipe(autoprefixer(['last 15 versions']))
@@ -78,6 +84,12 @@ gulp.task('pug', function() {
 	.pipe(pug({
 		pretty: true
 	}))
+	.on('error', notify.onError(function(error) {
+		return {
+			title: 'Pug',
+			message: error.message
+		};
+	}))
 	.pipe(gulp.dest(paths.devDir))
 	.pipe(browserSync.reload({stream: true}));
 });
@@ -86,6 +98,7 @@ gulp.task('watch', ['sass', 'js', 'browser-sync'], function() {
 	gulp.watch(paths.blocks + '**/*.sass', ['sass']);
 	gulp.watch(paths.blocks + '**/*.pug', ['pug']);
 	gulp.watch(['libs/**/*.js', paths.devDir + 'js/common.js'], ['js']);
+	gulp.watch(paths.devDir + 'img/svg/sprite/*.svg', ['svgSpriteBuild']);
 	gulp.watch(paths.devDir + '*.html', browserSync.reload);
 });
 
@@ -196,7 +209,7 @@ gulp.task('svgSpriteBuild', function () {
 					render: {
 						scss: {
 							dest:'../../../../app/sass/_sprite.scss',
-							template: "app/sass/templates/_sprite_template.scss"
+							template: paths.blocks + "templates/_sprite_template.scss"
 						}
 					},
           example: false
