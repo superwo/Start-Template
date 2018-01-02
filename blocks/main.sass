@@ -27,22 +27,28 @@ body input:required:valid,
 body textarea:required:valid
 	color: #666
 
-*
+*,
+*::after,
+*::before
 	margin: 0
 	padding: 0
-	box-sizing: border-box
+	box-sizing: inherit
+
+html
+	font-size: 62.5%
 
 html, body
 	height: 100%
 
 body
-	font-size: 16px
-	min-width: 320px
+	font-size: 1.6rem
+	min-width: 32rem
 	position: relative
 	line-height: 1.75
 	font-family: $default-font
 	overflow-x: hidden
 	opacity: 1
+	box-sizing:border-box
 
 a:link, a:visited
 	text-decoration: none
