@@ -1,5 +1,4 @@
 var gulp           = require('gulp'),
-		gutil          = require('gulp-util' ),
 		sass           = require('gulp-sass'),
 		pug						 = require('gulp-pug'),
 		plumber        = require('gulp-plumber'),
@@ -28,23 +27,13 @@ var paths = {
 		};
 
 // Tasks
-
-gulp.task('common-js', function() {
-	return gulp.src([
-		paths.devDir + 'js/common.js',
-		])
-	.pipe(concat('common.min.js'))
-	.pipe(uglify())
-	.pipe(gulp.dest(paths.devDir + 'js'));
-});
-
-gulp.task('js', ['common-js'], function() {
+gulp.task('js', function() {
 	return gulp.src([
 		paths.devDir + 'libs/jquery/dist/jquery.min.js',
-		paths.devDir + 'js/common.min.js', // Всегда в конце
+		paths.devDir + 'js/common.js', // Always at the end
 		])
 	.pipe(concat('scripts.min.js'))
-	// .pipe(uglify()) // Минимизировать весь js (на выбор)
+	// .pipe(uglify()) // Mifify js (opt.)
 	.pipe(gulp.dest(paths.devDir + 'js'))
 	.pipe(browserSync.reload({stream: true}));
 });
@@ -55,6 +44,7 @@ gulp.task('browser-sync', function() {
 			baseDir: paths.devDir
 		},
 		notify: false,
+		// open: false
 		// tunnel: true,
 		// tunnel: "projectmane", //Demonstration page: http://projectmane.localtunnel.me
 	});
@@ -73,7 +63,7 @@ gulp.task('sass', function() {
 	.pipe(rename({suffix: '.min', prefix : ''}))
 	.pipe(gcmq())
 	.pipe(autoprefixer(['last 15 versions']))
-	.pipe(cleanCSS()) // Опционально, закомментировать при отладке
+	.pipe(cleanCSS( {level: { 1: { specialComments: 0 } } })) // Opt., comment out when debugging
 	.pipe(gulp.dest(paths.devDir + 'css'))
 	.pipe(browserSync.reload({stream: true}));
 });
@@ -129,24 +119,6 @@ gulp.task('build', ['removedist', 'pug', 'imagemin', 'sass', 'js'], function() {
 
 });
 
-gulp.task('deploy', function() {
-
-	var conn = ftp.create({
-		host:      'hostname.com',
-		user:      'username',
-		password:  'userpassword',
-		parallel:  10,
-		log: gutil.log
-	});
-
-	var globs = [
-	'dist/**',
-	'dist/.htaccess',
-	];
-	return gulp.src(globs, {buffer: false})
-	.pipe(conn.dest('/path/to/folder/on/server'));
-
-});
 
 gulp.task('removedist', function() { return del.sync('dist'); });
 gulp.task('clearcache', function () { return cache.clearAll(); });
